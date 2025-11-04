@@ -1,0 +1,29 @@
+name: IaC CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: ./iac
+        run: terraform init -input=false
+
+      - name: Terraform Format Check
+        working-directory: ./iac
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        working-directory: ./iac
+        run: terraform validate
